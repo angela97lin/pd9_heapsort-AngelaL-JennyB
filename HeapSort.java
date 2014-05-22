@@ -62,19 +62,20 @@ public class HeapSort {
     }
 
 
-  public static void heapify(int[] input){
-	
-	for (int i = 1; i<input.length; i++){
-	    int parent = (i-1)/2;
-	    int child = i;
-	   
-	    while (child > 0){
-		if (input[parent] < input[child]){
-		    swap(input, parent, child);
-		    // System.out.println(child);
+    private static void heapify( int[] data ) {
+	for ( int i = 1; i < data.length; i++ ) {
+	    int pos = i;
+	    int parentPos;
+	    while ( pos > 0 ) {
+		parentPos = ( pos - 1 ) / 2;
+		
+		if( data[pos] > data[parentPos] ) {
+		    swap( data, pos, parentPos );
+		    pos = parentPos;
 		}
-		child = parent;
-		parent = (child-1)/2;
+		else {
+		    break;
+		}
 	    }
 	}
     }
@@ -87,11 +88,17 @@ public class HeapSort {
 
     public static void main( String[] args ) {
 
-	int[] yo = { 1, 7, 8, 4, 9, 10, 13, 6 };
+	int[] yo = { 4, 13, 1, 8, 9, 7, 10, 6 };
 	System.out.println( "orig: " + java.util.Arrays.toString(yo) );
 	heapify( yo );
 	System.out.println( "heapified: " + java.util.Arrays.toString(yo) );
 	System.out.println( "sorted: " + java.util.Arrays.toString(sort(yo)) );
+
+	int[] yoo = { 12, 545, 17, 69, 607, 114, 6678, 1946, 18};
+	System.out.println( "orig: " + java.util.Arrays.toString(yoo) );
+	heapify( yoo );
+	System.out.println( "heapified: " + java.util.Arrays.toString(yoo) );
+	System.out.println( "sorted: " + java.util.Arrays.toString(sort(yoo)) );
 
     }//end main
 
