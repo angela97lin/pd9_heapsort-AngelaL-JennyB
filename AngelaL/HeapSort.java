@@ -1,16 +1,7 @@
-//Angela Lin
+//Angela Lin (w/ Jenny Baran)
 //APCS2 pd. 9
-//HW41: But I Already Have a Quick Sort
-//2014-05-19
-
-/*
-Big-O notation strikes again!
-
-As the homework title hints, HeapSort is like QuickSort in that the average/amortized runtime for HeapSort is O(n log n): Adding and removing elements to the heap has a O(log n) runtime, but we must then go through the entire heap n times, the runtime is log n * n or )(log n). (Not entirely sure about this part but...) It seems like the best scenario and worst scenario runtimes would both have an O(n log n) runtime. No matter whether or not the array is already sorted or not, we will still add the value to its proper place in the heap and then remove each element from the heap. However, in the case of an already-sorted array, the add function in building the heap will not have to swap with its parents, saving a little memory and time. 
-
- */
-
-
+//HW42: Dig a Hole, Fill it Up
+//2014-05-21
 
 
 import java.util.*;
@@ -18,35 +9,94 @@ import java.io.*;
 
 public class HeapSort {
 
-    /* Made not useful since hSort's return type is another array, not void
-    //helper function that helps switch the element at pos1 with the element at pos2 in array arr
-    public void swapper(Integer[] arr, Integer pos1, Integer pos2){
-	Integer temp = arr[pos1];
+ 
+    public int[] hSort(int[] input){
+	heapify(input);
+	sort(input);
+	return input;
+    }
+    //helper function that swaps two elements
+    public void swap(int pos1, int pos2, int[] arr){
+	int temp = arr[pos1];
 	arr[pos1] = arr[pos2];
 	arr[pos2] = temp;
     }
-    */
-    public Integer[] hSort(Integer[] input){
-	ALHeap heap = new ALHeap();
-	//add elements to the heap
-	for (int i = 0; i<input.length; i++){
-	    heap.add(input[i]);
-	}
 
-	Integer[] retArr = new Integer[input.length];
-	int counter = 0;
-	//remove min value from the heap and add it to a new array :)
-	while (heap.isEmpty()!=true){
-	    retArr[counter] = heap.removeMin();
-	    counter++;
+    public void heapify(int[] input){
+	
+	for (int i = 1; i<input.length; i++){
+	    int parent = (i-1)/2;
+	    int child = i;
+	   
+	    while (child > 0){
+		if (input[parent] < input[child]){
+		    swap(parent, child, input);
+		    // System.out.println(child);
+		}
+		child = parent;
+		parent = (child-1)/2;
+	    }
 	}
-	return retArr;
+    }
+ 
+
+    public void sort(int[] input){
+	int partition = input.length-1;
+	while (partition > 0){
+	    int temp = input[0];
+	    swap(partition, 0, input);
+	
+	    int parent = 0;
+	    int child = findMaxChild(input, parent);
+
+	    //System.out.println(child);
+	    while (child < partition && child >= 0){
+		if (input[parent] < input[child]){
+		    swap(parent, child, input);
+		}
+		parent = child;
+		child = findMaxChild(input, parent);
+	    }
+	    partition--;
+	    
+	}
     }
 
- 
+    public int findMaxChild(int[] a, int pos){
+	int retVal;
+	int lc = 2*pos + 1; //index of left child
+	int rc = 2*pos + 2; //index of right child
+
+	//pos is not in the heap or pos is a leaf position
+	if ( pos < 0 || pos >= a.length || lc >= a.length )
+	    retVal = -1;
+	//if no right child, then left child is only option for min
+	else if ( rc >= a.length || lc >= a.length)
+	    retVal = lc;
+	//have 2 children, so compare to find most
+	else if (a[lc] > a[rc] )
+	    retVal = lc;
+	else
+	    retVal = rc;
+	return retVal;
+    }
+
 
     public static void main(String[] args){
 
+
+	//System.out.println((1-2)/2);
+	HeapSort test1 = new HeapSort();
+	int[] testH = {12,545,17,69};
+	int[] testF = {12,545,17,69,607,114,6678,1946,18};
+	test1.heapify(testF);
+	System.out.println(Arrays.toString(testF));
+	test1.sort(testF);
+	System.out.println(Arrays.toString(testF));
+
+	//should print same thing :)
+	System.out.println(Arrays.toString(test1.hSort(testF)));
+	/*
 	HeapSort test1 = new HeapSort();
 	Integer[] testA = {34,1,5,0,23};
 	System.out.println(Arrays.toString(testA));
@@ -60,7 +110,7 @@ public class HeapSort {
 	Integer[] testC = {34,1,5,10,33,11,21,0,23};
 	System.out.println(Arrays.toString(testC));
 	System.out.println(Arrays.toString(test1.hSort(testC)));
-
+	*/
 
 
     }
